@@ -1,4 +1,4 @@
-# Kieran-OutplayTes
+# Kieran-OutplayTest
 
 Hello, Outplay Team, this is my submission for the test. Each exercise is organised into each of 
 there respective folders in the same Unity project. Each one has a scene which you can run to 
@@ -23,6 +23,8 @@ the board in the hierarchy and change the values within.
 this one has a seed value which is used for the random generator to get different boards.
 A board will be displayed on screen representing the Jewels 
 and the result will be outputted through a debug message.
+
+If the best score is equal to 2 it means that there is no valid move
 
 Exercise 3:
 
