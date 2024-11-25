@@ -4,26 +4,39 @@ using UnityEngine;
 
 public static class MathPredictions
 {
+    //Current implementation only handles gravity going downwards
     public static bool TryCalculateXPositionAtHeight(float h, Vector2 p, Vector2 v, float G, float w, ref float xPosition)
     {
-        //Find Time Takes To Reach Height
+        
         float displacement = h - p.y;
+        //checks if the position of the ball already at the predicted height
         if(displacement == 0)
         {
+            Debug.LogWarning("Ball was at the position of the height to reach");
             xPosition = p.x;
             return true;
         }
 
-        if (v.y <= 0 && h > p.y) return false;
+
+        //Checks if the ball is going downwards and the height is above the ball
+        if (v.y <= 0 && h > p.y)
+        {
+            Debug.LogWarning("Ball went downwards while height was set above");
+            return false;
+        }
+
 
         //Check if ball reaches height
         float maxHeight = ((v.y * v.y) / -G) * 0.5f + p.y;
         Debug.Log("Max Height: " + maxHeight);
-        if (maxHeight < h) return false;
-
-       
+        if (maxHeight < h)
+        {
+            Debug.LogWarning("Ball was unable to reach the height set");
+            return false;
+        }
+        //Find Time Takes To Reach Heights
         Debug.Log("Displacement: " + displacement + "Height: " + h + "Velocity Y: " + v.y + "Gravity: " + G);
-        float timeOne = 0, timeTwo = 0;
+        float timeOne = 0f, timeTwo = 0f;
 
         //Utlising the equation s = ut - 1/2gt² rearranging it for -1/2gt² + ut - s = 0
         //to then use the quadratic formula to obtain the time it takes to reach the height
@@ -42,9 +55,64 @@ public static class MathPredictions
 
 
         //Use time to find how far the ball goes in the X Axis
+        float distanceX = 0f;
+        //checks whether the first time or second time should be used based on the position and velocity of the player
+        if (p.y < h && v.y > 0)
+        {
+            distanceX = v.x * timeOne;            
+            Debug.Log("Distance X: " + distanceX);
+        }
+        else
+        {
+            distanceX = v.x * timeTwo;
+            Debug.Log("Distance X: " + distanceX);
+        }
 
         //Find where the ball lies within the boundary
+        //Checks if the ball went right or left
+        if (distanceX > 0)
+        {
+            float temp = distanceX - (w - p.x);
+            //checks if the ball reaches the wall
+            if(temp < 0)
+            {
+                xPosition = p.x + distanceX;
+                Debug.Log("Position X: " + xPosition);
+            }
+            else
+            {
+                float temptwo = temp / w;
+                Debug.Log((int)temptwo);
+                //checks how many times the ball hits the wall
+                float totalLoops = (int)temptwo;
+                //Calculates the position of the ball within the boundary
+                xPosition = Mathf.Abs((w * (totalLoops % 2)) - (temp - (totalLoops * w)));
+                Debug.Log("Position X: " + xPosition);
+            }
+        }
+        else
+        {
+            float temp = Mathf.Abs(distanceX) - p.x;
+            //checks if the ball reaches the wall
+            if (temp < 0)
+            {
+                xPosition = p.x - Mathf.Abs(distanceX);
+                Debug.Log("Position X: " + xPosition);
+            }
+            else
+            {
+                float temptwo = temp / w;
+                Debug.Log((int)temptwo);
+                //checks how many times the ball hits the wall
+                float totalLoops = (int)temptwo;
+                //Calculates the position of the ball within the boundary 
+                xPosition = Mathf.Abs((w * ((totalLoops) % 2)) - (temp - (totalLoops * w)));
+                Debug.Log("Position X: " + xPosition);
+            }
+        }
 
-        return false;
+       
+
+        return true;
     }
 }
