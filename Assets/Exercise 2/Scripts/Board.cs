@@ -1,6 +1,34 @@
+using UnityEngine;
+
 public class Board
 {
-    enum JewelKind
+    public Board()
+    {
+        board = new JewelKind[10,10];
+
+        for(int y = 0; y < GetHeight(); y++)
+        {
+            for (int x = 0; x < GetWidth(); x++)
+            {
+               SetJewel(x,y,(JewelKind)Random.Range(1,8));
+            }
+        }
+    }
+
+    public Board(int sizeX, int sizeY)
+    {
+        board = new JewelKind[sizeX, sizeY];
+
+        for (int y = 0; y < GetHeight(); y++)
+        {
+            for (int x = 0; x < GetWidth(); x++)
+            {
+                SetJewel(x, y, (JewelKind)Random.Range(1, 8));
+            }
+        }
+    }
+
+    public enum JewelKind
     {
         Empty,
         Red,
@@ -12,7 +40,7 @@ public class Board
         Violet
     }
 
-    enum MoveDirection
+    public enum MoveDirection
     {
         Up,
         Down,
@@ -20,29 +48,34 @@ public class Board
         Right
     }
 
-    struct Move
+    public struct Move
     {
         public int x;
         public int y;
         public MoveDirection direction;
     }
+
+    JewelKind[,] board; 
+
     int GetWidth()
     {
-        return 0;
+        return board.GetLength(0);
     }
     int GetHeight()
     {
-        return 0;
+        return board.GetLength(1);
     }
-    JewelKind GetJewel(int x, int y)
+    public JewelKind GetJewel(int x, int y)
     {
-        return JewelKind.Empty;
+        if (x < 0 || x > GetWidth() - 1 || y < 0 || y > GetHeight() - 1) return JewelKind.Empty;
+        return board[x,y];
     }
     void SetJewel(int x, int y, JewelKind kind)
     {
-
+        if (x < 0 || x > GetWidth() - 1 || y < 0 || y > GetHeight() - 1) return;
+        board[x,y] = kind;
     }
-    Move CalculateBestMoveForBoard()
+    public Move CalculateBestMoveForBoard()
     {
         Move bestMove = new Move();
         int bestScore = 2;
@@ -75,6 +108,9 @@ public class Board
             Shuffle();
         }
 
+        Debug.Log("Best Move: Pos: " + bestMove.x + " : " + bestMove.y + " Direction: " + bestMove.direction);
+        Debug.Log("Highest Score: " + bestScore);
+
         //Return best move
         return bestMove;
     }
@@ -100,24 +136,43 @@ public class Board
             case MoveDirection.Left:
                 //Check score for jewel moving to the left
                 finalScore += CheckMatchScore(move.x-1, move.y, GetJewel(move.x, move.y));
+
+                //This is to check if the same jewel was switched with each other
+                if (GetJewel(move.x, move.y) == GetJewel(move.x - 1, move.y)) break;
+
                 //Check score for jewel moving to the right
                 finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x-1, move.y));
                 break;
+
             case MoveDirection.Right:
                 //Check score for jewel moving to the right
                 finalScore += CheckMatchScore(move.x + 1, move.y, GetJewel(move.x, move.y));
+
+                //This is to check if the same jewel was switched with each other
+                if (GetJewel(move.x, move.y) == GetJewel(move.x + 1, move.y)) break;
+
                 //Check score for jewel moving to the right
                 finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x + 1, move.y));
                 break;
+
             case MoveDirection.Down:
                 //Check score for jewel moving Down
                 finalScore += CheckMatchScore(move.x, move.y - 1, GetJewel(move.x, move.y));
+
+                //This is to check if the same jewel was switched with each other
+                if (GetJewel(move.x, move.y) == GetJewel(move.x, move.y - 1)) break;
+
                 //Check score for jewel moving Up
                 finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y - 1));
                 break;
+
             case MoveDirection.Up:
                 //Check score for jewel moving Up
                 finalScore += CheckMatchScore(move.x, move.y + 1, GetJewel(move.x, move.y));
+
+                //This is to check if the same jewel was switched with each other
+                if (GetJewel(move.x, move.y) == GetJewel(move.x, move.y + 1)) break;
+
                 //Check score for jewel moving Down
                 finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y + 1));
                 break;
@@ -149,6 +204,10 @@ public class Board
             {
                 tempVerticalScore++;
             }
+            else
+            {
+                tempVerticalScore = 0;
+            }
 
             //Checks to see if the temp score is a match and applies it to the final vertical score
             if (tempVerticalScore > verticalScore && tempVerticalScore > 2)
@@ -172,7 +231,10 @@ public class Board
             {
                 tempHorizontalScore++;
             }
-
+            else
+            {
+                tempHorizontalScore = 0;
+            }
             //Checks to see if the temp score is a match and applies it to the final horzontal score
             if (tempHorizontalScore > horizontalScore && tempHorizontalScore > 2)
             {
