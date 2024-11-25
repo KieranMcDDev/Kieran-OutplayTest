@@ -3,7 +3,7 @@ using UnityEngine;
 public class Board
 {
     public Board()
-    {
+    {      
         board = new JewelKind[10,10];
 
         for(int y = 0; y < GetHeight(); y++)
@@ -11,6 +11,11 @@ public class Board
             for (int x = 0; x < GetWidth(); x++)
             {
                SetJewel(x,y,(JewelKind)Random.Range(1,8));
+                //Makes sure that the jewel placed doesnt already have a match
+                while (CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
+                {
+                    SetJewel(x, y, (JewelKind)Random.Range(1, 8));
+                }
             }
         }
     }
@@ -22,8 +27,12 @@ public class Board
         for (int y = 0; y < GetHeight(); y++)
         {
             for (int x = 0; x < GetWidth(); x++)
-            {
+            {             
                 SetJewel(x, y, (JewelKind)Random.Range(1, 8));
+                while(CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
+                {
+                    SetJewel(x, y, (JewelKind)Random.Range(1, 8));
+                }
             }
         }
     }
@@ -212,20 +221,17 @@ public class Board
                 if(jewel == switchedJewel)
                 {
                     tempVerticalScore++;
-                    continue;
                 }
                 else
                 {
                     tempVerticalScore = 0;
-                    continue;
                 }
             }
-
             //Checks if the current grid pos is the appropriate jewel
-            if (GetJewel(x, y + i) == jewel)
+            else if (GetJewel(x, y + i) == jewel)
             {
                 tempVerticalScore++;
-                if (x == 3 && y == 3)
+                if (x == 1 && y == 1)
                 {
                     Debug.Log("Temp Vertical Score: " + tempVerticalScore + " Pos: Y: " + (x + i));
                 }
@@ -267,18 +273,20 @@ public class Board
                 {
 
                     tempHorizontalScore++;
-                    continue;
                 }
                 else
                 {
                     tempHorizontalScore = 0;
-                    continue;
+
                 }
             }
-
             //Checks if the current grid pos is the appropriate jewel
-            if (GetJewel(x + i, y) == jewel)
+            else if (GetJewel(x + i, y) == jewel)
             {
+                if (x == 1 && y == 1)
+                {
+                    Debug.Log("Temp Vertical Score: " + tempVerticalScore + " Pos: Y: " + (x + i));
+                }
                 tempHorizontalScore++;
 
             }
@@ -294,9 +302,9 @@ public class Board
             }
         }
 
-        if(x == 3 && y == 3)
+        if(x == 1 && y == 1)
         {
-            //Debug.Log("Vertical: " + verticalScore + " Horizontal: " + horizontalScore + "Jewel Colour: " + jewel);
+            Debug.Log("Vertical: " + verticalScore + " Horizontal: " + horizontalScore + "Jewel Colour: " + jewel);
         }
         
 
