@@ -29,7 +29,8 @@ public class Board
             for (int x = 0; x < GetWidth(); x++)
             {             
                 SetJewel(x, y, (JewelKind)Random.Range(1, 8));
-                while(CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
+                //Makes sure that the jewel placed doesnt already have a match
+                while (CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
                 {
                     SetJewel(x, y, (JewelKind)Random.Range(1, 8));
                 }
@@ -74,13 +75,16 @@ public class Board
     {
         return board.GetLength(1);
     }
+
     public JewelKind GetJewel(int x, int y)
     {
+        //Checks if its a valid jewel
         if (x < 0 || x > GetWidth() - 1 || y < 0 || y > GetHeight() - 1) return JewelKind.Empty;
         return board[x,y];
     }
     void SetJewel(int x, int y, JewelKind kind)
     {
+        //Checks if its a valid jewel
         if (x < 0 || x > GetWidth() - 1 || y < 0 || y > GetHeight() - 1) return;
         board[x,y] = kind;
     }

@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class MainObject : MonoBehaviour
 {
-
+    //Transforms for the Main Object to go towards
+    //The reason transforms are used is because it would make it easier fo rthe designer to move and see where the point is in the scene
     [SerializeField]
     Transform[] points = new Transform[3];
 
-    [SerializeField]
     int index;
 
     [SerializeField]
     float speed;
 
+    //Particle and Sound effect object
     [SerializeField]
     GameObject DeathObject;
 
@@ -23,6 +24,7 @@ public class MainObject : MonoBehaviour
     }
     public void Update()
     {
+        //Checks if the mainobject is still going towards a point
         if(index < points.Length)
         {
             MoveTo();
@@ -44,6 +46,7 @@ public class MainObject : MonoBehaviour
 
     }
 
+    //Used when the player reaches the endpoint or collides with a obstacle
     void OnDeath()
     {
         DeathObject.SetActive(true);
@@ -54,17 +57,17 @@ public class MainObject : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collision");
-
+        //Checks for collision with obstacle
         if (other.tag == "Obstacle")
         {
             OnDeath();
         }
     }
+
 #if UNITY_EDITOR
+    //Draws lines and spheres to represent the path and points
     private void OnDrawGizmos()
     {
-        // Draw a yellow cube at the transform position
-
         if (points.Length < 1) return;
         if (points[0] != null)
         {

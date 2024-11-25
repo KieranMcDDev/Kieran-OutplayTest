@@ -8,11 +8,15 @@ public class MatchGame : MonoBehaviour
 
     [SerializeField]
     int BoardSizeX, BoardSizeY;
+
+    //Prefab for Jewels
     [SerializeField]
     GameObject JewelObject;
 
+    //Random Seed Value
     [SerializeField]
     int seed;
+    //Handles spawning of the board
     private void Awake()
     {
         Random.InitState(seed);
@@ -23,9 +27,11 @@ public class MatchGame : MonoBehaviour
         {
             for (int x = 0; x < BoardSizeX; x++)
             {
+                //Spawning Jewels
                 GameObject jewel = Instantiate<GameObject>(JewelObject, transform);
                 jewel.transform.SetLocalPositionAndRotation(new Vector3(x - (float)BoardSizeX/2f + 0.5f, y - (float)BoardSizeY/2f + 0.5f,0), Quaternion.identity);
 
+                //Sets the colour of the object
                 Color color = new Color(0,0,0,0);
                 switch (board.GetJewel(x, y))
                 {

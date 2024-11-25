@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     int totalObstacles = 100;
 
+    //Area to spawn obstacles
     [SerializeField]
     float maxX, minX, maxY, minY, maxZ, minZ;
 

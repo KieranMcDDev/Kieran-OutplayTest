@@ -72,6 +72,7 @@ public static class MathPredictions
         //Checks if the ball went right or left
         if (distanceX > 0)
         {
+            //Removes the distance from the player to the wall
             float temp = distanceX - (w - p.x);
             //checks if the ball reaches the wall
             if(temp < 0)
@@ -81,9 +82,9 @@ public static class MathPredictions
             }
             else
             {
+                //checks how many times the ball hits the wall
                 float temptwo = temp / w;
                 Debug.Log((int)temptwo);
-                //checks how many times the ball hits the wall
                 float totalLoops = (int)temptwo;
                 //Calculates the position of the ball within the boundary
                 xPosition = Mathf.Abs((w * (totalLoops % 2)) - (temp - (totalLoops * w)));
@@ -92,6 +93,7 @@ public static class MathPredictions
         }
         else
         {
+            //Removes the distance from the player to the wall
             float temp = Mathf.Abs(distanceX) - p.x;
             //checks if the ball reaches the wall
             if (temp < 0)
@@ -101,9 +103,10 @@ public static class MathPredictions
             }
             else
             {
+
+                //checks how many times the ball hits the wall
                 float temptwo = temp / w;
                 Debug.Log((int)temptwo);
-                //checks how many times the ball hits the wall
                 float totalLoops = (int)temptwo;
                 //Calculates the position of the ball within the boundary 
                 xPosition = Mathf.Abs((w * ((totalLoops) % 2)) - (temp - (totalLoops * w)));
