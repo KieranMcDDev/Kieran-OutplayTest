@@ -24,6 +24,9 @@ public class MainObject : MonoBehaviour
         {
             MoveTo();
         }
+        else{
+            Destroy(gameObject);
+        }
     }
 
     //Move to current point
@@ -34,6 +37,17 @@ public class MainObject : MonoBehaviour
         if (Vector3.Distance(transform.position, points[index].position) == 0)
         {
             index++;
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Collision");
+
+        if (other.tag == "Obstacle")
+        {
+            Destroy(gameObject);
         }
     }
 
