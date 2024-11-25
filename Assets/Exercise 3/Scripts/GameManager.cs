@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     GameObject ObstaclePrefab;
+
+
     private void Awake()
     {
+        //Loop Through the amount of obstacles to spawn them in the range set
         for (int i = 0; i < totalObstacles; i++)
         {
             Vector3 position = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), Random.Range(minZ, maxZ));
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviour
 }
 
 
+
 #if UNITY_EDITOR
 [CustomEditor(typeof(GameManager))]
 [CanEditMultipleObjects]
@@ -75,7 +79,7 @@ public class GameManagerEditor : Editor
 
         //Makes sure that the min is greater than the max values for the appropriate axis
         if (minX.floatValue > maxX.floatValue) minX.floatValue = maxX.floatValue;
-        if (maxY.floatValue > maxY.floatValue) maxY.floatValue = maxY.floatValue;
+        if (minY.floatValue > maxY.floatValue) maxY.floatValue = maxY.floatValue;
         if (minZ.floatValue > minZ.floatValue) minZ.floatValue = maxZ.floatValue;
 
         serializedObject.ApplyModifiedProperties();
