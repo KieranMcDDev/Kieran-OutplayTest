@@ -24,7 +24,7 @@ public class MatchGame : MonoBehaviour
             for (int x = 0; x < BoardSizeX; x++)
             {
                 GameObject jewel = Instantiate<GameObject>(JewelObject, transform);
-                jewel.transform.SetLocalPositionAndRotation(new Vector3(x,y,0), Quaternion.identity);
+                jewel.transform.SetLocalPositionAndRotation(new Vector3(x - (float)BoardSizeX/2f + 0.5f, y - (float)BoardSizeY/2f + 0.5f,0), Quaternion.identity);
 
                 Color color = new Color(0,0,0,0);
                 switch (board.GetJewel(x, y))
