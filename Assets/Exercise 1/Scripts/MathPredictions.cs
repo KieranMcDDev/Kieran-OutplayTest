@@ -84,7 +84,7 @@ public static class MathPredictions
             {
                 //checks how many times the ball hits the wall
                 float temptwo = temp / w;
-                Debug.Log((int)temptwo);
+                Debug.Log("Wall Bounces: " +  (int)temptwo);
                 float totalLoops = (int)temptwo;
                 //Calculates the position of the ball within the boundary
                 xPosition = Mathf.Abs((w * (totalLoops % 2)) - (temp - (totalLoops * w)));
@@ -106,7 +106,7 @@ public static class MathPredictions
 
                 //checks how many times the ball hits the wall
                 float temptwo = temp / w;
-                Debug.Log((int)temptwo);
+                Debug.Log("Wall Bounces: " + (int)temptwo);
                 float totalLoops = (int)temptwo;
                 //Calculates the position of the ball within the boundary 
                 xPosition = Mathf.Abs((w * ((totalLoops) % 2)) - (temp - (totalLoops * w)));
