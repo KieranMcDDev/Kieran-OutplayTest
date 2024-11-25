@@ -83,7 +83,7 @@ public class Board
         //Loop through grid in a checker board pattern
         for(int y = 0; y < GetHeight(); y++)
         {
-            for(int x = y%2; x < GetWidth(); x++)
+            for(int x = y%2; x < GetWidth(); x+=2)
             {
                 for(int z = 0; z < 4; z++)
                 {
