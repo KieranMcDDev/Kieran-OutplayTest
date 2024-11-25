@@ -340,7 +340,7 @@ MonoBehaviour:
   BoardSizeX: 10
   BoardSizeY: 10
   JewelObject: {fileID: 721165575608565268, guid: f61b95575fd68094081b00628a8ac8d2, type: 3}
-  seed: 12
+  seed: 34
 --- !u!4 &964115949
 Transform:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ public class MatchGame : MonoBehaviour
     {
         Random.InitState(seed);
 
+        //Sets up and calculates the best move for board
         board = new Board(BoardSizeX, BoardSizeY);
 
         for (int y = 0; y < BoardSizeY; y++)
@@ -61,7 +62,5 @@ public class MatchGame : MonoBehaviour
                 jewel.GetComponent<SpriteRenderer>().color = color;
             }
         }
-
-        board.CalculateBestMoveForBoard();
     }
 }

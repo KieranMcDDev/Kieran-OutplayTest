@@ -1,33 +1,41 @@
+using System.Drawing;
 using UnityEngine;
 
 public class Board
 {
+    //Default Board
     public Board()
     {      
         board = new JewelKind[10,10];
 
-        for(int y = 0; y < GetHeight(); y++)
-        {
-            for (int x = 0; x < GetWidth(); x++)
-            {
-               SetJewel(x,y,(JewelKind)Random.Range(1,8));
-                //Makes sure that the jewel placed doesnt already have a match
-                while (CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
-                {
-                    SetJewel(x, y, (JewelKind)Random.Range(1, 8));
-                }
-            }
-        }
+        BuildBoard(10,10);
+
+        CalculateBestMoveForBoard();
+    }
+    
+    //Custom Board
+    public Board(int sizeX, int sizeY)
+    {
+        //Sets board size to a valid amount if too low
+        if (sizeX < 4) sizeX = 4;
+        if (sizeY < 4) sizeY = 4;
+
+        board = new JewelKind[sizeX, sizeY];
+
+        BuildBoard(sizeX, sizeY);
+
+        CalculateBestMoveForBoard();
     }
 
-    public Board(int sizeX, int sizeY)
+    //Sets up the board
+    void BuildBoard(int sizeX,int sizeY)
     {
         board = new JewelKind[sizeX, sizeY];
 
         for (int y = 0; y < GetHeight(); y++)
         {
             for (int x = 0; x < GetWidth(); x++)
-            {             
+            {
                 SetJewel(x, y, (JewelKind)Random.Range(1, 8));
                 //Makes sure that the jewel placed doesnt already have a match
                 while (CheckMatchScore(x, y, GetJewel(x, y), x, y, GetJewel(x, y)) > 0)
@@ -65,12 +73,16 @@ public class Board
         public MoveDirection direction;
     }
 
+    //Stores the jewels for the board
     JewelKind[,] board; 
 
+    //Width of the board
     int GetWidth()
     {
         return board.GetLength(0);
     }
+
+    //Height of the board
     int GetHeight()
     {
         return board.GetLength(1);
@@ -93,44 +105,51 @@ public class Board
         Move bestMove = new Move();
         int bestScore = 2;
 
-        //Loop through grid in a checker board pattern
-        for(int y = 0; y < GetHeight(); y++)
+        while(bestScore == 2)
         {
-            for(int x = y%2; x < GetWidth(); x+=2)
+            //Loop through grid in a checker board pattern
+            for (int y = 0; y < GetHeight(); y++)
             {
-                for(int z = 0; z < 4; z++)
+                for (int x = y % 2; x < GetWidth(); x += 2)
                 {
-                    Move move = new Move();
-                    move.x = x; move.y = y; move.direction = (MoveDirection)z;
-                    //Checks to see what the move score is 
-                    int moveScore = CheckMove(move);
-
-                    //Checks if the move score is better than the best score
-                    if (moveScore > bestScore)
+                    for (int z = 0; z < 4; z++)
                     {
-                        bestScore = moveScore;
-                        bestMove = move;
+                        Move move = new Move();
+                        move.x = x; move.y = y; move.direction = (MoveDirection)z;
+                        //Checks to see what the move score is 
+                        int moveScore = CheckMove(move);
+
+                        //Checks if the move score is better than the best score
+                        if (moveScore > bestScore)
+                        {
+                            bestScore = moveScore;
+                            bestMove = move;
+                        }
                     }
                 }
             }
-        }
 
-        //Check if there was any matches if not shuffle
-        if(bestScore == 2)
-        {
-            Shuffle();
+            //Check if there was any matches if not shuffle
+            if (bestScore == 2)
+            {
+                Debug.Log("No Available Moves Shuffle");
+                Shuffle();              
+            }
         }
 
         Debug.Log("Best Move: Pos: " + bestMove.x + " : " + bestMove.y + " Direction: " + bestMove.direction);
         Debug.Log("Highest Score: " + bestScore);
 
+
+
         //Return best move
         return bestMove;
     }
 
+    //Shuffle Currently Replaces the board but would be changed to move around the jewels instead
     void Shuffle()
     {
-
+        BuildBoard(GetWidth(), GetHeight());
     }
 
     int CheckMove(Move move)
@@ -235,10 +254,6 @@ public class Board
             else if (GetJewel(x, y + i) == jewel)
             {
                 tempVerticalScore++;
-                if (x == 1 && y == 1)
-                {
-                    Debug.Log("Temp Vertical Score: " + tempVerticalScore + " Pos: Y: " + (x + i));
-                }
             }
             else
             {
@@ -287,12 +302,7 @@ public class Board
             //Checks if the current grid pos is the appropriate jewel
             else if (GetJewel(x + i, y) == jewel)
             {
-                if (x == 1 && y == 1)
-                {
-                    Debug.Log("Temp Vertical Score: " + tempVerticalScore + " Pos: Y: " + (x + i));
-                }
                 tempHorizontalScore++;
-
             }
             else
             {
@@ -305,13 +315,7 @@ public class Board
                 horizontalScore = tempHorizontalScore;
             }
         }
-
-        if(x == 1 && y == 1)
-        {
-            Debug.Log("Vertical: " + verticalScore + " Horizontal: " + horizontalScore + "Jewel Colour: " + jewel);
-        }
-        
-
+       
         //Combines the vertical and horizontal score
         finalScore = verticalScore + horizontalScore;
 
