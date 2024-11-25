@@ -151,10 +151,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07cdac32c4beeed43a6c211cf1d2b699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Velocity: {x: -23451, y: -100}
-  Position: {x: 100, y: 234}
+  Velocity: {x: 2000, y: 233}
+  Position: {x: 100, y: 0}
   Gravity: -9.81
-  Height: 234
+  Height: 307
   XPos: 0
   Width: 100
 --- !u!4 &324686566
