@@ -46,7 +46,8 @@ public class Board
     {
         Move bestMove = new Move();
         int bestScore = 2;
-        //Loop through grid
+
+        //Loop through grid in a checker board pattern
         for(int y = 0; y < GetHeight(); y++)
         {
             for(int x = y%2; x < GetWidth(); x++)
@@ -55,8 +56,10 @@ public class Board
                 {
                     Move move = new Move();
                     move.x = x; move.y = y; move.direction = (MoveDirection)z;
+                    //Checks to see what the move score is 
                     int moveScore = CheckMove(move);
 
+                    //Checks if the move score is better than the best score
                     if (moveScore > bestScore)
                     {
                         bestScore = moveScore;
@@ -65,14 +68,15 @@ public class Board
                 }
             }
         }
-        //Check for match
-
-        //Check if match is greater than previous match
 
         //Check if there was any matches if not shuffle
+        if(bestScore == 2)
+        {
+            Shuffle();
+        }
 
         //Return best move
-        return new Move();
+        return bestMove;
     }
 
     void Shuffle()
@@ -87,9 +91,39 @@ public class Board
         if (move.x == GetWidth()-1 && move.direction == MoveDirection.Right) return 0;
         if (move.y == 0 && move.direction == MoveDirection.Down) return 0;
         if (move.y == GetHeight()-1 && move.direction == MoveDirection.Up) return 0;
-        
 
-        return 0;
+        int finalScore = 0;
+        
+        //Check move direction to check for matches
+        switch (move.direction)
+        {
+            case MoveDirection.Left:
+                //Check score for jewel moving to the left
+                finalScore += CheckMatchScore(move.x-1, move.y, GetJewel(move.x, move.y));
+                //Check score for jewel moving to the right
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x-1, move.y));
+                break;
+            case MoveDirection.Right:
+                //Check score for jewel moving to the right
+                finalScore += CheckMatchScore(move.x + 1, move.y, GetJewel(move.x, move.y));
+                //Check score for jewel moving to the right
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x + 1, move.y));
+                break;
+            case MoveDirection.Down:
+                //Check score for jewel moving Down
+                finalScore += CheckMatchScore(move.x, move.y - 1, GetJewel(move.x, move.y));
+                //Check score for jewel moving Up
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y - 1));
+                break;
+            case MoveDirection.Up:
+                //Check score for jewel moving Up
+                finalScore += CheckMatchScore(move.x, move.y + 1, GetJewel(move.x, move.y));
+                //Check score for jewel moving Down
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y + 1));
+                break;
+        }
+
+        return finalScore;
     }
 
 
