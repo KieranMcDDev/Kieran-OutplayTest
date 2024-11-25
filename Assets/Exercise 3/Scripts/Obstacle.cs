@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-   
-    public void Awake()
-    {
-        
-    }
 
-    //Handle spawning the game object
-    public void Spawn()
+    public void Spawn(Vector3 pos)
     {
-
+        transform.position = pos;
     }
 }

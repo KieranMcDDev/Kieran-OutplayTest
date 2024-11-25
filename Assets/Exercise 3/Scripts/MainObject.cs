@@ -14,6 +14,9 @@ public class MainObject : MonoBehaviour
     [SerializeField]
     float speed;
 
+    [SerializeField]
+    GameObject DeathObject;
+
     private void Start()
     {
         index = 0;
@@ -25,7 +28,7 @@ public class MainObject : MonoBehaviour
             MoveTo();
         }
         else{
-            Destroy(gameObject);
+            OnDeath();
         }
     }
 
@@ -41,16 +44,23 @@ public class MainObject : MonoBehaviour
 
     }
 
+    void OnDeath()
+    {
+        DeathObject.SetActive(true);
+        DeathObject.transform.position = transform.position;
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collision");
 
         if (other.tag == "Obstacle")
         {
-            Destroy(gameObject);
+            OnDeath();
         }
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         // Draw a yellow cube at the transform position
@@ -80,4 +90,5 @@ public class MainObject : MonoBehaviour
 
         
     }
+#endif
 }
