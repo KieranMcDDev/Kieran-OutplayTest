@@ -135,46 +135,46 @@ public class Board
         {
             case MoveDirection.Left:
                 //Check score for jewel moving to the left
-                finalScore += CheckMatchScore(move.x-1, move.y, GetJewel(move.x, move.y));
+                finalScore += CheckMatchScore(move.x-1, move.y, GetJewel(move.x, move.y), move.x, move.y, GetJewel(move.x - 1, move.y));
 
                 //This is to check if the same jewel was switched with each other
                 if (GetJewel(move.x, move.y) == GetJewel(move.x - 1, move.y)) break;
 
                 //Check score for jewel moving to the right
-                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x-1, move.y));
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x-1, move.y), move.x - 1, move.y, GetJewel(move.x, move.y));
                 break;
 
             case MoveDirection.Right:
                 //Check score for jewel moving to the right
-                finalScore += CheckMatchScore(move.x + 1, move.y, GetJewel(move.x, move.y));
+                finalScore += CheckMatchScore(move.x + 1, move.y, GetJewel(move.x, move.y), move.x, move.y, GetJewel(move.x + 1, move.y));
 
                 //This is to check if the same jewel was switched with each other
                 if (GetJewel(move.x, move.y) == GetJewel(move.x + 1, move.y)) break;
 
                 //Check score for jewel moving to the right
-                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x + 1, move.y));
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x + 1, move.y), move.x + 1, move.y, GetJewel(move.x, move.y));
                 break;
 
             case MoveDirection.Down:
                 //Check score for jewel moving Down
-                finalScore += CheckMatchScore(move.x, move.y - 1, GetJewel(move.x, move.y));
+                finalScore += CheckMatchScore(move.x, move.y - 1, GetJewel(move.x, move.y), move.x, move.y, GetJewel(move.x, move.y - 1));
 
                 //This is to check if the same jewel was switched with each other
                 if (GetJewel(move.x, move.y) == GetJewel(move.x, move.y - 1)) break;
 
                 //Check score for jewel moving Up
-                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y - 1));
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y - 1), move.x, move.y - 1, GetJewel(move.x, move.y));
                 break;
 
             case MoveDirection.Up:
                 //Check score for jewel moving Up
-                finalScore += CheckMatchScore(move.x, move.y + 1, GetJewel(move.x, move.y));
+                finalScore += CheckMatchScore(move.x, move.y + 1, GetJewel(move.x, move.y), move.x, move.y, GetJewel(move.x, move.y + 1));
 
                 //This is to check if the same jewel was switched with each other
                 if (GetJewel(move.x, move.y) == GetJewel(move.x, move.y + 1)) break;
 
                 //Check score for jewel moving Down
-                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y + 1));
+                finalScore += CheckMatchScore(move.x, move.y, GetJewel(move.x, move.y + 1), move.x, move.y + 1, GetJewel(move.x, move.y));
                 break;
         }
 
@@ -182,7 +182,7 @@ public class Board
     }
 
 
-    int CheckMatchScore(int x, int y, JewelKind jewel)
+    int CheckMatchScore(int x, int y, JewelKind jewel, int fromX, int fromY, JewelKind switchedJewel)
     {
         int verticalScore = 0;
         int horizontalScore = 0;
@@ -192,6 +192,13 @@ public class Board
         //Checks for vertical matches
         for (int i = 2; i > -3; i--)
         {
+            //Since we know that the center jewel is the jewel that is being searched add 1 to the vertical score
+            if (i == 0)
+            {
+                tempVerticalScore++;
+                continue;
+            }
+           
             //Checks if the current y pos is within the boundary
             if (y + i > GetHeight() - 1 || y + i < 0)
             {
@@ -199,10 +206,29 @@ public class Board
                 continue;
             }
 
+            //Check the switched tile
+            if (x == fromX && y + i == fromY)
+            {
+                if(jewel == switchedJewel)
+                {
+                    tempVerticalScore++;
+                    continue;
+                }
+                else
+                {
+                    tempVerticalScore = 0;
+                    continue;
+                }
+            }
+
             //Checks if the current grid pos is the appropriate jewel
             if (GetJewel(x, y + i) == jewel)
             {
                 tempVerticalScore++;
+                if (x == 3 && y == 3)
+                {
+                    Debug.Log("Temp Vertical Score: " + tempVerticalScore + " Pos: Y: " + (x + i));
+                }
             }
             else
             {
@@ -212,6 +238,7 @@ public class Board
             //Checks to see if the temp score is a match and applies it to the final vertical score
             if (tempVerticalScore > verticalScore && tempVerticalScore > 2)
             {
+
                 verticalScore = tempVerticalScore;
             }
         }
@@ -219,6 +246,13 @@ public class Board
         int tempHorizontalScore = 0;
         for (int i = 2; i > -3; i--)
         {
+            //Since we know that the center jewel is the jewel that is being searched add 1 to the vertical score
+            if (i == 0)
+            {
+                tempHorizontalScore++;
+                continue;
+            }
+
             //Checks if the current x pos is within the boundary
             if (x + i > GetWidth() - 1 || x + i < 0)
             {
@@ -226,21 +260,45 @@ public class Board
                 continue;
             }
 
+            //Check the switched tile
+            if (x + i == fromX && y== fromY)
+            {
+                if (jewel == switchedJewel)
+                {
+
+                    tempHorizontalScore++;
+                    continue;
+                }
+                else
+                {
+                    tempHorizontalScore = 0;
+                    continue;
+                }
+            }
+
             //Checks if the current grid pos is the appropriate jewel
             if (GetJewel(x + i, y) == jewel)
             {
                 tempHorizontalScore++;
+
             }
             else
             {
                 tempHorizontalScore = 0;
             }
+
             //Checks to see if the temp score is a match and applies it to the final horzontal score
             if (tempHorizontalScore > horizontalScore && tempHorizontalScore > 2)
             {
                 horizontalScore = tempHorizontalScore;
             }
         }
+
+        if(x == 3 && y == 3)
+        {
+            //Debug.Log("Vertical: " + verticalScore + " Horizontal: " + horizontalScore + "Jewel Colour: " + jewel);
+        }
+        
 
         //Combines the vertical and horizontal score
         finalScore = verticalScore + horizontalScore;

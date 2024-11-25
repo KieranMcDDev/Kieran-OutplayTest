@@ -10,8 +10,13 @@ public class MatchGame : MonoBehaviour
     int BoardSizeX, BoardSizeY;
     [SerializeField]
     GameObject JewelObject;
+
+    [SerializeField]
+    int seed;
     private void Awake()
     {
+        Random.InitState(seed);
+
         board = new Board(BoardSizeX, BoardSizeY);
 
         for (int y = 0; y < BoardSizeY; y++)
