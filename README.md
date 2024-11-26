@@ -26,6 +26,8 @@ and the result will be outputted through a debug message.
 
 If the best score is equal to 2 it means that there is no valid move
 
+the coord 0, 0 is the bottom left of the grid
+
 Exercise 3:
 
 This one is slightly different there are 3 key objects to look at first is the main object 
